@@ -40,6 +40,19 @@ namespace OPENSUBDIV_VERSION {
 
 namespace Far {
 
+namespace {
+#ifdef __INTEL_COMPILER
+#pragma warning (push)
+#pragma warning disable 1572
+#endif
+
+    inline bool isWeightZero(float w) { return (w == 0.0f); }
+
+#ifdef __INTEL_COMPILER
+#pragma warning (pop)
+#endif
+}
+
 //------------------------------------------------------------------------------
 
 void
@@ -258,7 +271,7 @@ StencilTableFactory::AppendLocalPointStencilTable(
         for (int j = 0; j < src.GetSize(); ++j) {
             Index index = src.GetVertexIndices()[j];
             float weight = src.GetWeights()[j];
-            if (weight == 0.0) continue;
+            if (isWeightZero(weight)) continue;
 
             if (factorize) {
                 dst.AddWithWeight(
